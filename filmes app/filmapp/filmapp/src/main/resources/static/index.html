@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <title>Movie Check</title>
+</head>
+<body>
+<h1>Movie Check</h1>
+
+<h2>Filmek listája:</h2>
+<ul id="filmList"></ul>
+
+<h2>Új film hozzáadása:</h2>
+<form id="filmForm">
+    <input type="text" id="title" placeholder="Cím" required>
+    <input type="text" id="director" placeholder="Rendező" required>
+    <button type="submit">Hozzáadás</button>
+</form>
+
+<script>
+    async function getFilms() {
+        const res = await fetch('/films');
+        const films = await res.json();
+        const list = document.getElementById('filmList');
+        list.innerHTML = '';
+        films.forEach(f => {
+            const li = document.createElement('li');
+            li.textContent = `${f.title} (${f.director})`;
+            list.appendChild(li);
+        });
+    }
+
+    document.getElementById('filmForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const title = document.getElementById('title').value;
+        const director = document.getElementById('director').value;
+
+        await fetch('/films', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ title, director })
+        });
+
+        document.getElementById('filmForm').reset();
+        getFilms();
+    });
+
+    getFilms();
+</script>
+</body>
+</html>
