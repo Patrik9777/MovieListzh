@@ -28,4 +28,4 @@ jobs:
         with:
           name: filmapp-jar
           path: target/*.jar
-//asd
+
